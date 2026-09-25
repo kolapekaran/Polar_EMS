@@ -17,7 +17,7 @@ from app.services.performance_cache import get_or_compute
 router = APIRouter(prefix="/api", tags=["Frontend Integration"])
 
 
-def _snapshot(hour_offset: int = 0, strategy_result: dict | None = None):
+def _snapshot_uncached(hour_offset: int = 0, strategy_result: dict | None = None):
     state = state_to_dict(twin.state)
     f = _forecast(max(72, hour_offset + 1))["forecast"]
     point = next((x for x in f if int(x.get("hour_offset", 0)) == hour_offset), f[min(len(f)-1, hour_offset)])
@@ -199,6 +199,30 @@ def _snapshot(hour_offset: int = 0, strategy_result: dict | None = None):
         ],
         "provenance": {"weatherSource":"ENGINEERING MODEL","powerTelemetrySource":"ENGINEERING MODEL","forecastModelSource":"ML/REFERENCE","thermalModelSource":"ENGINEERING MODEL"},
     }
+
+def _snapshot(hour_offset: int = 0, strategy_result: dict | None = None):
+    if strategy_result is not None:
+        return _snapshot_uncached(hour_offset, strategy_result)
+
+    s = twin.state
+    key = (
+        "snapshot",
+        int(hour_offset),
+        round(float(s.weather.temperature_celsius), 3),
+        round(float(s.weather.wind_speed_mps), 3),
+        round(float(s.weather.solar_irradiance_w_m2), 1),
+        round(float(s.loads.total_load_kw), 3),
+        round(float(s.battery.soc_ratio), 4),
+        round(float(s.fuel.fuel_remaining_liters), 2),
+        round(float(s.generation.generator_health_percent), 2),
+    )
+
+    return get_or_compute(
+        key,
+        lambda: _snapshot_uncached(hour_offset),
+        ttl_seconds=20.0,
+    )
+
 
 @router.get("/intelligence/snapshot")
 def frontend_snapshot(hourOffset:int=Query(0, ge=0, le=72)):
