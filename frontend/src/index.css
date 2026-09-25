@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* POLAR EMS FINAL FRONTEND — stable visual system */
+html, body, #root {
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body { margin: 0; background: #020712; color: #e2e8f0; }
+
+/* Keep dashboard grids and flex rows inside the viewport instead of
+   allowing long card content to create a horizontal page overflow. */
+.grid > *, .flex > *, .space-y-4 > *, .space-y-3 > *, .space-y-2 > * {
+  min-width: 0;
+}
+
+img, svg, canvas { max-width: 100%; }
+
+main, main > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  max-width: 100%;
+}
+button, input, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.command-twin-height { height: min(68vh, 640px); min-height: 560px; }
+.station-page-strip { min-height: 112px; border-bottom: 1px solid rgba(8,145,178,.25); overflow: hidden; }
+@media (max-width: 900px) {
+  .command-twin-height { height: 62vh; min-height: 460px; }
+}
+@media (max-width: 640px) {
+  .command-twin-height { height: 58vh; min-height: 380px; }
+  .station-page-strip { min-height: 96px; }
+}
+
+
+/* Desktop fit correction: keep the full command header visible at common
+   hackathon/laptop resolutions (1366–1600px) without browser zoom. */
+@media (min-width: 1280px) and (max-width: 1600px) {
+  header > div:first-child {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: .5rem;
+  }
+
+  header nav {
+    gap: 0 !important;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  header nav button {
+    padding-left: .55rem !important;
+    padding-right: .55rem !important;
+    gap: .35rem !important;
+    font-size: .68rem !important;
+    letter-spacing: .045em !important;
+    min-width: 0;
+  }
+
+  header nav button svg {
+    width: .9rem;
+    height: .9rem;
+    flex-shrink: 0;
+  }
+
+  header > div:first-child > div:first-child {
+    flex-shrink: 1;
+    min-width: 160px;
+  }
+
+  header > div:first-child > div:last-child {
+    flex-shrink: 0;
+    gap: .5rem;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1400px) {
+  header > div:first-child > div:first-child {
+    min-width: 145px;
+  }
+
+  header nav button {
+    padding-left: .4rem !important;
+    padding-right: .4rem !important;
+    font-size: .64rem !important;
+  }
+
+  header > div:first-child > div:last-child .bg-emerald-950\/40 {
+    padding-left: .4rem;
+    padding-right: .4rem;
+  }
+}
+
+/* Never let a wide chart/table/card establish the page width. */
+.overflow-x-auto {
+  max-width: 100%;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "POLAR EMS - Maitri Station",
+  "description": "Antarctic Energy Management System & Digital Twin for Maitri Station, Antarctica featuring 7-tab command dashboard, real-time energy flows, optimization, and resilience analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
